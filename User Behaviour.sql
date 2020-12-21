@@ -69,7 +69,7 @@ from userbehavior
 group by date
 order by sum(case when behaviour_type = 'pv' then 1 else 0 end) / count(distinct(user_id)) desc;
 
--- user volume analysis based on day
+-- user volume analysis based on hour
 select hour,
 count(distinct(user_id)) as 'total visits',
 sum(case when behaviour_type = 'pv' then 1 else 0 end) as 'total page visits',
