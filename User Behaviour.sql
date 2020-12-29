@@ -48,24 +48,24 @@ SELECT DISTINCT(behaviour_type) FROM userbehavior;
 
 -- descriptive statistics
 SELECT 
-COUNT(DISTINCT(user_id)) AS users,
-COUNT(DISTINCT(product_id)) AS product,
-COUNT(DISTINCT(category_id)) AS category,
+COUNT(DISTINCT(user_id)) AS customers,
+COUNT(DISTINCT(product_id)) AS products,
+COUNT(DISTINCT(category_id)) AS categories,
 SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) AS 'page visit',
 SUM(CASE WHEN behaviour_type = 'fav' THEN 1 ELSE 0 END) AS collection,
 SUM(CASE WHEN behaviour_type = 'cart' THEN 1 ELSE 0 END) AS 'add to cart',
 SUM(CASE WHEN behaviour_type = 'buy' THEN 1 ELSE 0 END) AS purchased
 FROM userbehavior;
 
--- user volume analysis
+-- customer volume analysis
 SELECT 
-COUNT(DISTINCT(user_id)) AS users,
+COUNT(DISTINCT(user_id)) AS customers,
 SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) AS page_visit,
-SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) / COUNT(DISTINCT(user_id)) AS 'average page visit per user'
+SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) / COUNT(DISTINCT(user_id)) AS 'average page visit per customer'
 FROM userbehavior;
 -- result shows each user visited 97 times between 2017/11/25 to 2017/12/03
 
--- user volume analysis per day
+-- customer volume analysis per day
 SELECT date,
 COUNT(DISTINCT(user_id)) AS 'total visits',
 SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) AS 'total page visits',
@@ -74,7 +74,7 @@ FROM userbehavior
 GROUP BY date
 ORDER BY SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) / COUNT(DISTINCT(user_id)) desc;
 
--- user volume analysis per hour
+-- customer volume analysis per hour
 SELECT hour,
 COUNT(DISTINCT(user_id)) AS 'total visits',
 SUM(CASE WHEN behaviour_type = 'pv' THEN 1 ELSE 0 END) AS 'total page visits',
@@ -98,19 +98,19 @@ ORDER BY hour;
 -- more purchase during night, peak at 19pm
 
 -- active user based on date
-SELECT date, COUNT(DISTINCT(user_id)) AS 'active user'
+SELECT date, COUNT(DISTINCT(user_id)) AS 'active customer'
 FROM userbehavior
 GROUP BY date 
 ORDER BY date; 
 
 -- active user based on hour
-SELECT hour, COUNT(DISTINCT(user_id)) AS 'active user'
+SELECT hour, COUNT(DISTINCT(user_id)) AS 'active customer'
 FROM userbehavior
 GROUP BY hour 
 ORDER BY hour; 
 
 -- average frequency for customer payment by date
-SELECT date, behaviour_type, COUNT(DISTINCT(user_id)) AS 'user',
+SELECT date, behaviour_type, COUNT(DISTINCT(user_id)) AS 'customer',
 SUM(CASE WHEN behaviour_type='buy' THEN 1 ELSE 0 END)/COUNT(DISTINCT(user_id)) AS 'average user payment frequency'
 FROM userbehavior
 WHERE behaviour_type='buy'
@@ -119,7 +119,7 @@ ORDER BY date ASC;
 
 
 -- average frequency for customer payment by hour
-SELECT hour, COUNT(DISTINCT user_id) as user
+SELECT hour, COUNT(DISTINCT user_id) as customer
 FROM userbehavior
 WHERE behaviour_type='buy'
 GROUP BY hour;
@@ -127,7 +127,7 @@ GROUP BY hour;
 -- calculate payment rate based on date
 -- payment rate: number of purchases / number of customers
 SELECT 
-	a.date, 
+    a.date, 
     a.number_of_customers,
     b.number_of_purchases,
     CONCAT(ROUND(b.number_of_purchases/a.number_of_customers*100,2),'%') as payment_rate 
@@ -143,8 +143,8 @@ WHERE behaviour_type='buy'
 GROUP BY date) as b 
 ON a.date =b.date;
 
+		    
 -- calculate number of customer retained by the company in the first 7 days
-
 select count(distinct user_id) as first_day_customer_num from userbehavior
 where date = '2017-11-25';-- 359
 select count(distinct user_id) as second_day_customer_num from userbehavior
