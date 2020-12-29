@@ -106,7 +106,7 @@ FROM userbehavior
 GROUP BY hour 
 ORDER BY hour; 
 
--- average frequency payment by date
+-- average payment frequency by date
 SELECT date, behaviour_type, COUNT(DISTINCT(user_id)) AS 'customer',
 SUM(CASE WHEN behaviour_type='buy' THEN 1 ELSE 0 END)/COUNT(DISTINCT(user_id)) AS 'average user payment frequency'
 FROM userbehavior
@@ -115,7 +115,7 @@ GROUP BY date
 ORDER BY date ASC;
 
 
--- average frequency payment by hour
+-- average payment frequency by hour
 SELECT hour, COUNT(DISTINCT user_id) as customer
 FROM userbehavior
 WHERE behaviour_type='buy'
@@ -141,7 +141,7 @@ GROUP BY date) as b
 ON a.date =b.date;
 
 		    
--- calculate number of customer retained by the company in the first 7 days
+-- calculate number of customers retained by the company in the first 7 days
 select count(distinct user_id) as first_day_customer_num from userbehavior
 where date = '2017-11-25';-- 359
 select count(distinct user_id) as second_day_customer_num from userbehavior
