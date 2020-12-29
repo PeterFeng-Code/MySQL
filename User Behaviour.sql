@@ -5,8 +5,6 @@ USE self;
 -- first look at all the data
 SELECT * FROM userbehavior;
 
-
-
 -- Data Cleaning and Preparation
 -- check and deal with duplicate values
 SELECT user_id, product_id, timestamp
@@ -44,8 +42,7 @@ WHERE ID BETWEEN 1 AND 55891;
 -- checking different purchase behaviour first
 SELECT DISTINCT(behaviour_type) FROM userbehavior;
 
-
-
+							     
 -- descriptive statistics
 SELECT 
 COUNT(DISTINCT(user_id)) AS customers,
@@ -109,7 +106,7 @@ FROM userbehavior
 GROUP BY hour 
 ORDER BY hour; 
 
--- average frequency for customer payment by date
+-- average frequency payment by date
 SELECT date, behaviour_type, COUNT(DISTINCT(user_id)) AS 'customer',
 SUM(CASE WHEN behaviour_type='buy' THEN 1 ELSE 0 END)/COUNT(DISTINCT(user_id)) AS 'average user payment frequency'
 FROM userbehavior
@@ -118,7 +115,7 @@ GROUP BY date
 ORDER BY date ASC;
 
 
--- average frequency for customer payment by hour
+-- average frequency payment by hour
 SELECT hour, COUNT(DISTINCT user_id) as customer
 FROM userbehavior
 WHERE behaviour_type='buy'
